@@ -1,10 +1,10 @@
--- Создаём БД
+-- РЎРѕР·РґР°С‘Рј Р‘Р”
 CREATE DATABASE vk;
 
--- Делаем её текущей
+-- Р”РµР»Р°РµРј РµС‘ С‚РµРєСѓС‰РµР№
 USE vk;
 
--- Создаём таблицу пользователей
+-- РЎРѕР·РґР°С‘Рј С‚Р°Р±Р»РёС†Сѓ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
 CREATE TABLE users (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   first_name VARCHAR(100) NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE users (
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Таблица профилей
+-- РўР°Р±Р»РёС†Р° РїСЂРѕС„РёР»РµР№
 CREATE TABLE profiles (
   user_id INT UNSIGNED NOT NULL,
   birthdate DATE,
@@ -28,7 +28,7 @@ CREATE TABLE profiles (
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Таблица сообщений
+-- РўР°Р±Р»РёС†Р° СЃРѕРѕР±С‰РµРЅРёР№
 CREATE TABLE messages (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, 
   from_user_id INT UNSIGNED NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE messages (
   created_at DATETIME DEFAULT NOW()
 );
 
--- Таблица дружбы
+-- РўР°Р±Р»РёС†Р° РґСЂСѓР¶Р±С‹
 CREATE TABLE friendship (
   user_id INT UNSIGNED NOT NULL,
   friend_id INT UNSIGNED NOT NULL,
@@ -49,27 +49,27 @@ CREATE TABLE friendship (
   PRIMARY KEY (user_id, friend_id)
 );
 
--- Таблица статусов дружеских отношений
+-- РўР°Р±Р»РёС†Р° СЃС‚Р°С‚СѓСЃРѕРІ РґСЂСѓР¶РµСЃРєРёС… РѕС‚РЅРѕС€РµРЅРёР№
 CREATE TABLE friendship_statuses (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(150) NOT NULL UNIQUE
 );
 
 
--- Таблица групп
+-- РўР°Р±Р»РёС†Р° РіСЂСѓРїРї
 CREATE TABLE communities (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(150) NOT NULL UNIQUE
 );
 
--- Таблица связи пользователей и групп
+-- РўР°Р±Р»РёС†Р° СЃРІСЏР·Рё РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ Рё РіСЂСѓРїРї
 CREATE TABLE communities_users (
   community_id INT UNSIGNED NOT NULL,
   user_id INT UNSIGNED NOT NULL,
   PRIMARY KEY (community_id, user_id)
 );
 
--- Таблица медиафайлов
+-- РўР°Р±Р»РёС†Р° РјРµРґРёР°С„Р°Р№Р»РѕРІ
 CREATE TABLE media (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   media_type_id INT UNSIGNED NOT NULL,
@@ -81,13 +81,13 @@ CREATE TABLE media (
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Таблица типов медиафайлов
+-- РўР°Р±Р»РёС†Р° С‚РёРїРѕРІ РјРµРґРёР°С„Р°Р№Р»РѕРІ
 CREATE TABLE media_types (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255) NOT NULL UNIQUE
 );
 
--- Создаем значения таблицы media_types
+-- РЎРѕР·РґР°РµРј Р·РЅР°С‡РµРЅРёСЏ С‚Р°Р±Р»РёС†С‹ media_types
 INSERT INTO media_types VALUES 
 (DEFAULT, 'photo'),
 (DEFAULT, 'video'),
@@ -95,70 +95,70 @@ INSERT INTO media_types VALUES
 (DEFAULT, 'game'),
 (DEFAULT, 'doc');
 
--- Проверяем вставку сгенерированной таблицы
+-- РџСЂРѕРІРµСЂСЏРµРј РІСЃС‚Р°РІРєСѓ СЃРіРµРЅРµСЂРёСЂРѕРІР°РЅРЅРѕР№ С‚Р°Р±Р»РёС†С‹
 SELECT * FROM users;
 
--- Реализуем таблицу семейного положения
+-- Р РµР°Р»РёР·СѓРµРј С‚Р°Р±Р»РёС†Сѓ СЃРµРјРµР№РЅРѕРіРѕ РїРѕР»РѕР¶РµРЅРёСЏ
 CREATE TABLE family_statuses (
 id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 name VARCHAR (50) NOT NULL UNIQUE
 );
 
--- Добавляем в столбец name значения
+-- Р”РѕР±Р°РІР»СЏРµРј РІ СЃС‚РѕР»Р±РµС† name Р·РЅР°С‡РµРЅРёСЏ
 INSERT INTO family_statuses (name)
   VALUES
   ('Single'),
   ('Married')
  ;
--- Посмотрим структуру таблицы profiles
+-- РџРѕСЃРјРѕС‚СЂРёРј СЃС‚СЂСѓРєС‚СѓСЂСѓ С‚Р°Р±Р»РёС†С‹ profiles
 DESC profiles;
 
--- Добавляем столбец family_status_id в таблицу profiles
+-- Р”РѕР±Р°РІР»СЏРµРј СЃС‚РѕР»Р±РµС† family_status_id РІ С‚Р°Р±Р»РёС†Сѓ profiles
 ALTER TABLE profiles ADD COLUMN family_status_id INT UNSIGNED AFTER hometown;
  
--- Заполняем весь столбец family_status_id случайными числами от 1 до 2
+-- Р—Р°РїРѕР»РЅСЏРµРј РІРµСЃСЊ СЃС‚РѕР»Р±РµС† family_status_id СЃР»СѓС‡Р°Р№РЅС‹РјРё С‡РёСЃР»Р°РјРё РѕС‚ 1 РґРѕ 2
 UPDATE profiles SET family_status_id = FLOOR(1 + (RAND() * 2));
 
--- Проверяем таблицу profiles
+-- РџСЂРѕРІРµСЂСЏРµРј С‚Р°Р±Р»РёС†Сѓ profiles
 SELECT * FROM profiles LIMIT 10;
 
--- Смотрим структуру таблицы users
+-- РЎРјРѕС‚СЂРёРј СЃС‚СЂСѓРєС‚СѓСЂСѓ С‚Р°Р±Р»РёС†С‹ users
 DESC users;
 
--- Корректируем столбцы created_at и updated_at, чтобы обновление не происходило раньше, чем создание
+-- РљРѕСЂСЂРµРєС‚РёСЂСѓРµРј СЃС‚РѕР»Р±С†С‹ created_at Рё updated_at, С‡С‚РѕР±С‹ РѕР±РЅРѕРІР»РµРЅРёРµ РЅРµ РїСЂРѕРёСЃС…РѕРґРёР»Рѕ СЂР°РЅСЊС€Рµ, С‡РµРј СЃРѕР·РґР°РЅРёРµ
 UPDATE users SET updated_at = created_at WHERE updated_at < created_at;
 
--- Смотрим структуру таблицы profiles
+-- РЎРјРѕС‚СЂРёРј СЃС‚СЂСѓРєС‚СѓСЂСѓ С‚Р°Р±Р»РёС†С‹ profiles
 DESC profiles;
 
--- Корректируем столбцы created_at и updated_at, чтобы обновление не происходило раньше, чем создание
+-- РљРѕСЂСЂРµРєС‚РёСЂСѓРµРј СЃС‚РѕР»Р±С†С‹ created_at Рё updated_at, С‡С‚РѕР±С‹ РѕР±РЅРѕРІР»РµРЅРёРµ РЅРµ РїСЂРѕРёСЃС…РѕРґРёР»Рѕ СЂР°РЅСЊС€Рµ, С‡РµРј СЃРѕР·РґР°РЅРёРµ
 UPDATE profiles SET updated_at = created_at WHERE updated_at < created_at;
 
--- Корректируем столбец birthdate, чтобы создание не происходило раньше, чем дата рождения
+-- РљРѕСЂСЂРµРєС‚РёСЂСѓРµРј СЃС‚РѕР»Р±РµС† birthdate, С‡С‚РѕР±С‹ СЃРѕР·РґР°РЅРёРµ РЅРµ РїСЂРѕРёСЃС…РѕРґРёР»Рѕ СЂР°РЅСЊС€Рµ, С‡РµРј РґР°С‚Р° СЂРѕР¶РґРµРЅРёСЏ
 UPDATE profiles SET birthdate = created_at WHERE birthdate > created_at;
 
--- Удаляем столбец user_id из таблицы profiles
+-- РЈРґР°Р»СЏРµРј СЃС‚РѕР»Р±РµС† user_id РёР· С‚Р°Р±Р»РёС†С‹ profiles
 ALTER TABLE profiles DROP COLUMN user_id;
 
--- Добавляем столбец user_id 
+-- Р”РѕР±Р°РІР»СЏРµРј СЃС‚РѕР»Р±РµС† user_id 
 ALTER TABLE profiles ADD COLUMN user_id INT UNSIGNED NOT NULL FIRST;
 
--- Добавляем столбцу user_id статус первичного ключа. Нам не удается это сделать, так как столбец заполнился нулями
+-- Р”РѕР±Р°РІР»СЏРµРј СЃС‚РѕР»Р±С†Сѓ user_id СЃС‚Р°С‚СѓСЃ РїРµСЂРІРёС‡РЅРѕРіРѕ РєР»СЋС‡Р°. РќР°Рј РЅРµ СѓРґР°РµС‚СЃСЏ СЌС‚Рѕ СЃРґРµР»Р°С‚СЊ, С‚Р°Рє РєР°Рє СЃС‚РѕР»Р±РµС† Р·Р°РїРѕР»РЅРёР»СЃСЏ РЅСѓР»СЏРјРё
 ALTER TABLE profiles ADD PRIMARY KEY(user_id);
 
--- Обновляем таблицу profiles и заполняем столбец user_id числами от 1 до 100. Но таким образом мы не исключаем повторения чисел.
+-- РћР±РЅРѕРІР»СЏРµРј С‚Р°Р±Р»РёС†Сѓ profiles Рё Р·Р°РїРѕР»РЅСЏРµРј СЃС‚РѕР»Р±РµС† user_id С‡РёСЃР»Р°РјРё РѕС‚ 1 РґРѕ 100. РќРѕ С‚Р°РєРёРј РѕР±СЂР°Р·РѕРј РјС‹ РЅРµ РёСЃРєР»СЋС‡Р°РµРј РїРѕРІС‚РѕСЂРµРЅРёСЏ С‡РёСЃРµР».
 UPDATE profiles SET user_id = FLOOR(1 + (RAND() * 100));
 
--- Удаляем столбец user_id из таблицы profiles
+-- РЈРґР°Р»СЏРµРј СЃС‚РѕР»Р±РµС† user_id РёР· С‚Р°Р±Р»РёС†С‹ profiles
 ALTER TABLE profiles DROP COLUMN user_id;
 
--- Добавляем столбец user_id с атрибутами auto_increment и primary key 
+-- Р”РѕР±Р°РІР»СЏРµРј СЃС‚РѕР»Р±РµС† user_id СЃ Р°С‚СЂРёР±СѓС‚Р°РјРё auto_increment Рё primary key 
 ALTER TABLE profiles ADD COLUMN user_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL FIRST;
 
--- Избавимся от признака auto_increment, так как числа в user_id необязательно должны идти по порядку. user_id связан с id таблицы users
+-- РР·Р±Р°РІРёРјСЃСЏ РѕС‚ РїСЂРёР·РЅР°РєР° auto_increment, С‚Р°Рє РєР°Рє С‡РёСЃР»Р° РІ user_id РЅРµРѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РґРѕР»Р¶РЅС‹ РёРґС‚Рё РїРѕ РїРѕСЂСЏРґРєСѓ. user_id СЃРІСЏР·Р°РЅ СЃ id С‚Р°Р±Р»РёС†С‹ users
   ALTER TABLE profiles MODIFY COLUMN user_id INT UNSIGNED UNIQUE;
  
- -- Создадим таблицу постов
+ -- РЎРѕР·РґР°РґРёРј С‚Р°Р±Р»РёС†Сѓ РїРѕСЃС‚РѕРІ
  CREATE TABLE posts (
    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
    author_id INT UNSIGNED NOT NULL,
@@ -168,10 +168,10 @@ ALTER TABLE profiles ADD COLUMN user_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY 
    updated_at DATETIME DEFAULT NOW() ON UPDATE NOW()
  );
 
--- Удалим таблицу постов
+-- РЈРґР°Р»РёРј С‚Р°Р±Р»РёС†Сѓ РїРѕСЃС‚РѕРІ
 DROP TABLE posts;
 
--- Создадим таблицу постов
+-- РЎРѕР·РґР°РґРёРј С‚Р°Р±Р»РёС†Сѓ РїРѕСЃС‚РѕРІ
  CREATE TABLE posts (
    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
    author_id INT UNSIGNED NOT NULL,
@@ -181,40 +181,40 @@ DROP TABLE posts;
    updated_at DATETIME DEFAULT NOW() ON UPDATE NOW()
   );
  
- -- Добавляем столбцы в таблицу communities
+ -- Р”РѕР±Р°РІР»СЏРµРј СЃС‚РѕР»Р±С†С‹ РІ С‚Р°Р±Р»РёС†Сѓ communities
 ALTER TABLE communities ADD COLUMN web VARCHAR(300) NOT NULL AFTER name;
 ALTER TABLE communities ADD COLUMN created_at DATETIME DEFAULT NOW() AFTER web;
 ALTER TABLE communities ADD COLUMN updated_at DATETIME DEFAULT NOW() ON UPDATE NOW() AFTER created_at;
 
--- Корректируем столбцы created_at и updated_at, чтобы обновление не происходило раньше, чем создание
+-- РљРѕСЂСЂРµРєС‚РёСЂСѓРµРј СЃС‚РѕР»Р±С†С‹ created_at Рё updated_at, С‡С‚РѕР±С‹ РѕР±РЅРѕРІР»РµРЅРёРµ РЅРµ РїСЂРѕРёСЃС…РѕРґРёР»Рѕ СЂР°РЅСЊС€Рµ, С‡РµРј СЃРѕР·РґР°РЅРёРµ
 UPDATE communities SET updated_at = created_at WHERE updated_at < created_at;
 
--- Посмотрим данные таблицы users
+-- РџРѕСЃРјРѕС‚СЂРёРј РґР°РЅРЅС‹Рµ С‚Р°Р±Р»РёС†С‹ users
 SELECT * FROM users LIMIT 10;
 
 
--- Посмотрим данные таблицы profiles
+-- РџРѕСЃРјРѕС‚СЂРёРј РґР°РЅРЅС‹Рµ С‚Р°Р±Р»РёС†С‹ profiles
 SELECT * FROM profiles LIMIT 10;
 
--- Посмотрим данные таблицы messages
+-- РџРѕСЃРјРѕС‚СЂРёРј РґР°РЅРЅС‹Рµ С‚Р°Р±Р»РёС†С‹ messages
 SELECT * FROM messages LIMIT 10;
 
--- Добиваемся исключения повторения значений to_user_id и from_user_id
+-- Р”РѕР±РёРІР°РµРјСЃСЏ РёСЃРєР»СЋС‡РµРЅРёСЏ РїРѕРІС‚РѕСЂРµРЅРёСЏ Р·РЅР°С‡РµРЅРёР№ to_user_id Рё from_user_id
 UPDATE messages SET to_user_id = to_user_id + 1 WHERE from_user_id = to_user_id;
 
--- Посмотрим данные таблицы media
+-- РџРѕСЃРјРѕС‚СЂРёРј РґР°РЅРЅС‹Рµ С‚Р°Р±Р»РёС†С‹ media
 SELECT * FROM media LIMIT 10;
 
--- Корректируем столбцы created_at и updated_at, чтобы обновление не происходило раньше, чем создание
+-- РљРѕСЂСЂРµРєС‚РёСЂСѓРµРј СЃС‚РѕР»Р±С†С‹ created_at Рё updated_at, С‡С‚РѕР±С‹ РѕР±РЅРѕРІР»РµРЅРёРµ РЅРµ РїСЂРѕРёСЃС…РѕРґРёР»Рѕ СЂР°РЅСЊС€Рµ, С‡РµРј СЃРѕР·РґР°РЅРёРµ
 UPDATE media SET updated_at = created_at WHERE updated_at < created_at;
 
--- Заполним столбец user_id случайными значениями
+-- Р—Р°РїРѕР»РЅРёРј СЃС‚РѕР»Р±РµС† user_id СЃР»СѓС‡Р°Р№РЅС‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё
 UPDATE media SET user_id = FLOOR(1 + (RAND() * 100));
 
--- Изменим значения столбца filename
+-- РР·РјРµРЅРёРј Р·РЅР°С‡РµРЅРёСЏ СЃС‚РѕР»Р±С†Р° filename
 UPDATE media SET filename = CONCAT('http://dropbox/vk/file_', metadata);
 
--- Изменяем значения столбца metadata
+-- РР·РјРµРЅСЏРµРј Р·РЅР°С‡РµРЅРёСЏ СЃС‚РѕР»Р±С†Р° metadata
 UPDATE media SET metadata = CONCAT(
   '{"',
   'owner',
@@ -222,25 +222,25 @@ UPDATE media SET metadata = CONCAT(
   (SELECT CONCAT(first_name, ' ', last_name) FROM users WHERE id = user_id),
   '"}');
  
- -- Посмотрим данные таблицы friendship
+ -- РџРѕСЃРјРѕС‚СЂРёРј РґР°РЅРЅС‹Рµ С‚Р°Р±Р»РёС†С‹ friendship
 SELECT * FROM friendship LIMIT 10;
 
--- Заполним столбец user_id случайными значениями
+-- Р—Р°РїРѕР»РЅРёРј СЃС‚РѕР»Р±РµС† user_id СЃР»СѓС‡Р°Р№РЅС‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё
 UPDATE friendship SET user_id = FLOOR(1 + (RAND() * 100));
 
--- Добиваемся исключения повторения значений user_id и friend_id
+-- Р”РѕР±РёРІР°РµРјСЃСЏ РёСЃРєР»СЋС‡РµРЅРёСЏ РїРѕРІС‚РѕСЂРµРЅРёСЏ Р·РЅР°С‡РµРЅРёР№ user_id Рё friend_id
 UPDATE friendship SET user_id = user_id + 1 WHERE user_id = friend_id;
 
--- Корректируем столбцы created_at и updated_at, чтобы обновление не происходило раньше, чем создание
+-- РљРѕСЂСЂРµРєС‚РёСЂСѓРµРј СЃС‚РѕР»Р±С†С‹ created_at Рё updated_at, С‡С‚РѕР±С‹ РѕР±РЅРѕРІР»РµРЅРёРµ РЅРµ РїСЂРѕРёСЃС…РѕРґРёР»Рѕ СЂР°РЅСЊС€Рµ, С‡РµРј СЃРѕР·РґР°РЅРёРµ
 UPDATE friendship SET requested_at = confirmed_at WHERE confirmed_at < requested_at;
 
--- Посмотрим данные таблицы friendship_statuses
+-- РџРѕСЃРјРѕС‚СЂРёРј РґР°РЅРЅС‹Рµ С‚Р°Р±Р»РёС†С‹ friendship_statuses
 SELECT * FROM friendship_statuses LIMIT 10;
 
--- Удалим значения таблицы friendship_statuses
+-- РЈРґР°Р»РёРј Р·РЅР°С‡РµРЅРёСЏ С‚Р°Р±Р»РёС†С‹ friendship_statuses
 TRUNCATE friendship_statuses;
 
--- Добавляем в столбец name значения
+-- Р”РѕР±Р°РІР»СЏРµРј РІ СЃС‚РѕР»Р±РµС† name Р·РЅР°С‡РµРЅРёСЏ
 INSERT INTO friendship_statuses (name)
   VALUES
   ('Confirmed'),
@@ -248,38 +248,38 @@ INSERT INTO friendship_statuses (name)
   ('Requested')
  ;
 
--- Заполним столбец status_id случайными значениями
+-- Р—Р°РїРѕР»РЅРёРј СЃС‚РѕР»Р±РµС† status_id СЃР»СѓС‡Р°Р№РЅС‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё
 UPDATE friendship SET status_id = FLOOR(1 + (RAND() * 3));
 
--- Смотрим структуру таблицы media
+-- РЎРјРѕС‚СЂРёРј СЃС‚СЂСѓРєС‚СѓСЂСѓ С‚Р°Р±Р»РёС†С‹ media
 DESC media;
 
--- Изменим тип столбца metadata
+-- РР·РјРµРЅРёРј С‚РёРї СЃС‚РѕР»Р±С†Р° metadata
 ALTER TABLE media MODIFY COLUMN metadata JSON;
 
--- Посмотрим данные таблицы communities
+-- РџРѕСЃРјРѕС‚СЂРёРј РґР°РЅРЅС‹Рµ С‚Р°Р±Р»РёС†С‹ communities
 SELECT * FROM communities LIMIT 10;
 
--- Ограничим количество communities до 10
+-- РћРіСЂР°РЅРёС‡РёРј РєРѕР»РёС‡РµСЃС‚РІРѕ communities РґРѕ 10
 DELETE FROM communities WHERE id > 10;
 
--- Посмотрим данные таблицы communities_users
+-- РџРѕСЃРјРѕС‚СЂРёРј РґР°РЅРЅС‹Рµ С‚Р°Р±Р»РёС†С‹ communities_users
 SELECT * FROM communities_users;
 
--- Заполним столбец community_id случайными значениями
+-- Р—Р°РїРѕР»РЅРёРј СЃС‚РѕР»Р±РµС† community_id СЃР»СѓС‡Р°Р№РЅС‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё
 UPDATE communities_users SET 
   community_id = FLOOR(1 + (RAND() * 10))
  ;
 
--- Проверяем таблицу family_statuses
+-- РџСЂРѕРІРµСЂСЏРµРј С‚Р°Р±Р»РёС†Сѓ family_statuses
 SELECT * FROM family_statuses;
 
--- Проверяем таблицу posts
+-- РџСЂРѕРІРµСЂСЏРµРј С‚Р°Р±Р»РёС†Сѓ posts
 SELECT * FROM posts;
--- Корректируем столбцы created_at и updated_at, чтобы обновление не происходило раньше, чем создание
+-- РљРѕСЂСЂРµРєС‚РёСЂСѓРµРј СЃС‚РѕР»Р±С†С‹ created_at Рё updated_at, С‡С‚РѕР±С‹ РѕР±РЅРѕРІР»РµРЅРёРµ РЅРµ РїСЂРѕРёСЃС…РѕРґРёР»Рѕ СЂР°РЅСЊС€Рµ, С‡РµРј СЃРѕР·РґР°РЅРёРµ
 UPDATE posts SET updated_at = created_at WHERE updated_at < created_at;
 
--- Создаем таблицу лайков медиа
+-- РЎРѕР·РґР°РµРј С‚Р°Р±Р»РёС†Сѓ Р»Р°Р№РєРѕРІ РјРµРґРёР°
 CREATE TABLE likes_media (
 id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 user_id INT UNSIGNED NOT NULL,
@@ -287,7 +287,7 @@ media_id INT UNSIGNED,
 created_at DATETIME DEFAULT NOW()
 );
 
--- Создаем таблицу лайков постов
+-- РЎРѕР·РґР°РµРј С‚Р°Р±Р»РёС†Сѓ Р»Р°Р№РєРѕРІ РїРѕСЃС‚РѕРІ
 CREATE TABLE likes_posts (
 id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 user_id INT UNSIGNED NOT NULL,
@@ -295,7 +295,7 @@ post_id INT UNSIGNED,
 created_at DATETIME DEFAULT NOW()
 );
 
--- Создаем таблицу лайков сообществ
+-- РЎРѕР·РґР°РµРј С‚Р°Р±Р»РёС†Сѓ Р»Р°Р№РєРѕРІ СЃРѕРѕР±С‰РµСЃС‚РІ
 CREATE TABLE likes_communities (
 id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 user_id INT UNSIGNED NOT NULL,
@@ -303,14 +303,375 @@ community_id INT UNSIGNED,
 created_at DATETIME DEFAULT NOW()
 );
 
--- Проверяем таблицу лайков медиа
-SELECT * FROM likes_media;
+-- РџСЂРѕРІРµСЂСЏРµРј С‚Р°Р±Р»РёС†Сѓ Р»Р°Р№РєРѕРІ РјРµРґРёР°
+SELECT * FROM ;
 
--- Проверяем таблицу лайков постов
+-- РџСЂРѕРІРµСЂСЏРµРј С‚Р°Р±Р»РёС†Сѓ Р»Р°Р№РєРѕРІ РїРѕСЃС‚РѕРІ
 SELECT * FROM likes_posts;
 
--- Проверяем таблицу лайков сообществ
+-- РџСЂРѕРІРµСЂСЏРµРј С‚Р°Р±Р»РёС†Сѓ Р»Р°Р№РєРѕРІ СЃРѕРѕР±С‰РµСЃС‚РІ
 SELECT * FROM likes_communities;
+
+-- РЈРґР°Р»СЏРµРј РІР°СЂРёР°РЅС‚ СЂРµР°Р»РёР·Р°С†РёРё Р»Р°Р№РєРѕРІ
+
+DROP TABLE likes_media;
+
+DROP TABLE likes_posts;
+
+DROP TABLE likes_communities;
+
+DROP TABLE IF EXISTS likes;
+
+-- РЎРѕР·РґР°РµРј С‚Р°Р±Р»РёС†Сѓ Р»Р°Р№РєРѕРІ
+CREATE TABLE likes (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  user_id INT UNSIGNED NOT NULL,
+  target_id INT UNSIGNED NOT NULL,
+  target_type_id INT UNSIGNED NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- РўР°Р±Р»РёС†Р° С‚РёРїРѕРІ Р»Р°Р№РєРѕРІ
+DROP TABLE IF EXISTS target_types;
+CREATE TABLE target_types (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL UNIQUE,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+-- Р—Р°РїРѕР»РЅСЏРµРј С‚Р°Р±Р»РёС†Сѓ С‚РёРїРѕРІ С‚Р°СЂРіРµС‚РѕРІ
+INSERT INTO target_types (name) VALUES 
+  ('messages'),
+  ('users'),
+  ('media'),
+  ('posts');
+ 
+ -- Р—Р°РїРѕР»РЅСЏРµРј Р»Р°Р№РєРё
+INSERT INTO likes 
+  SELECT 
+    id, 
+    FLOOR(1 + (RAND() * 100)), 
+    FLOOR(1 + (RAND() * 100)),
+    FLOOR(1 + (RAND() * 4)),
+    CURRENT_TIMESTAMP 
+  FROM messages;
+
+-- РџСЂРѕРІРµСЂРёРј
+SELECT * FROM likes LIMIT 10;
+
+-- РЎРјРѕС‚СЂРёРј СЃС‚СЂСѓРєС‚СѓСЂСѓ users Рё profiles
+DESC users;
+DESC profiles;
+-- Р’С‹Р±РёСЂР°РµРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+SELECT 
+  first_name, last_name, 
+  'main photo', 
+  'city' 
+    FROM users WHERE id = 3;
+-- РџСѓС‚СЊ Рє id С„РѕС‚РѕРіСЂР°С„РёРё  
+SELECT photo_id FROM profiles WHERE user_id =3;
+
+-- РЎРјРѕС‚СЂРёРј СЃС‚СЂСѓРєС‚СѓСЂСѓ media
+DESC media;
+
+-- РЎРєРѕРїРёСЂСѓРµРј РїСѓС‚СЊ Рє id РІ Р·Р°РїСЂРѕСЃ
+SELECT filename FROM media WHERE id =
+  (SELECT photo_id FROM profiles WHERE user_id =3);
+ 
+-- Р’СЃС‚Р°РІР»СЏРµРј Р·Р°РїСЂРѕСЃ РІС‹С€Рµ РІ Р·Р°РіР»СѓС€РєСѓ 'main photo'
+SELECT 
+  first_name, last_name, 
+  (SELECT filename FROM media WHERE id =
+    (SELECT photo_id FROM profiles WHERE user_id =3)) AS filename, 
+  'city' 
+    FROM users WHERE id = 3;
+   
+-- РџРѕР»СѓС‡РёРј РіРѕСЂРѕРґ
+SELECT hometown FROM profiles WHERE user_id = 3;
+
+-- Р’СЃС‚СЏРІР»СЏРµРј РіРѕСЂРѕРґ РІ РѕР±С‰РёР№ Р·Р°РїСЂРѕСЃ
+SELECT 
+  first_name, last_name, 
+  (SELECT filename FROM media WHERE id =
+    (SELECT photo_id FROM profiles WHERE user_id = 3)) AS filename, 
+  (SELECT hometown FROM profiles WHERE user_id = 3) AS hometown 
+    FROM users WHERE id = 3;
+
+-- РљРѕСЂСЂРµРєС‚РёСЂСѓРµРј Р·Р°РїСЂРѕСЃ. РЈР±РµСЂРµРј РїРѕРІС‚РѕСЂСЏСЋС‰РёРµСЃСЏ id РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+SELECT 
+  first_name, last_name, 
+  (SELECT filename FROM media WHERE id =
+    (SELECT photo_id FROM profiles WHERE user_id = users.id)) AS filename, 
+  (SELECT hometown FROM profiles WHERE user_id = users.id) AS hometown 
+    FROM users WHERE id = 3;
+   
+-- РџРѕР»СѓС‡РёРј РІСЃРµ С„РѕС‚РѕРіСЂР°С„РёРё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+SELECT * FROM media_types;
+
+SELECT filename FROM media
+  WHERE user_id = 3
+    AND media_type_id = (
+        SELECT id FROM media_types WHERE name = 'photo'
+      );
+     
+-- Р›РёР±Рѕ РјРѕР¶РЅРѕ РїРѕ id С„РѕС‚Рѕ РїРѕР»СѓС‡РёС‚СЊ С‚Р°РєРѕР№ Р¶Рµ СЂРµР·СѓР»СЊС‚Р°С‚
+SELECT filename FROM media
+  WHERE user_id = 3
+    AND media_type_id = 1;
+   
+-- Р’С‹Р±РёСЂР°РµРј РёСЃС‚РѕСЂРёСЋ РїРѕ РґРѕР±Р°РІР»РµРЅРёСЋ С„РѕС‚РѕРіСЂР°С„РёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј
+SELECT CONCAT(
+  'РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РґРѕР±Р°РІРёР» С„РѕС‚Рѕ ', 
+  filename, 
+  ' ', 
+  created_at) AS news 
+    FROM media 
+    WHERE user_id = 3 
+      AND media_type_id = (
+        SELECT id FROM media_types WHERE name LIKE 'photo'
+);
+
+-- РЈР»СѓС‡С€Р°РµРј Р·Р°РїСЂРѕСЃ, С‡С‚РѕР±С‹ РІРёРґРµС‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+SELECT CONCAT(
+  'РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ ', 
+  (SELECT CONCAT(first_name, ' ', last_name)
+    FROM users WHERE id = media.user_id),
+  ' РґРѕР±Р°РІРёР» С„РѕС‚Рѕ ', 
+  filename, ' ', 
+  created_at) AS news 
+    FROM media 
+    WHERE user_id = 3 
+      AND media_type_id = (
+        SELECT id FROM media_types WHERE name LIKE 'photo'
+);
+
+-- РќР°Р№С‚Рё РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№, РєРѕРјСѓ РїСЂРёРЅР°РґР»РµР¶Р°С‚ 10 СЃР°РјС‹С… С‚СЏР¶РµР»С‹С… С„Р°Р№Р»РѕРІ
+-- РЎРЅР°С‡Р°Р»Р° РІС‹Р±РёСЂР°РµРј СЃР»РµРґСѓСЋС‰РµРµ
+SELECT user_id, filename, size
+  FROM media 
+  ORDER BY size DESC
+  LIMIT 10;
+
+-- РќР°Р№РґРµРј РёРјРµРЅР° РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
+SELECT
+  (SELECT CONCAT(first_name, ' ', last_name)
+    FROM users u
+      WHERE u.id = m.user_id) AS owner,
+  filename,
+  size
+    FROM media m
+    ORDER BY size DESC
+    LIMIT 10;
+   
+-- CС‚СЂСѓРєС‚СѓСЂР° friendship
+DESC friendship;
+
+-- РќР°Р№РґРµРј РґСЂСѓР·РµР№ РЅР°С€РµРіРѕ РєРѕРЅРєСЂРµС‚РЅРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+SELECT friend_id FROM friendship WHERE user_id = 3;
+SELECT user_id FROM friendship WHERE friend_id = 3;
+
+-- РћР±СЉРµРґРёРЅСЏРµРј Р·Р°РїСЂРѕСЃС‹
+(SELECT friend_id FROM friendship WHERE user_id = 3) 
+   UNION
+(SELECT user_id FROM friendship WHERE friend_id = 3);
+
+-- РЎРјРѕС‚СЂРёРј С‚Р°Р±Р»РёС†Сѓ СЃС‚Р°С‚СѓСЃРѕРІ
+SELECT * FROM friendship_statuses;
+
+-- Р”РѕР±Р°РІРёРј СѓСЃР»РѕРІРёРµ РїРѕ СЃС‚Р°С‚СѓСЃСѓ РґСЂСѓР¶Р±С‹
+(SELECT friend_id 
+  FROM friendship 
+  WHERE user_id = 4
+    AND status_id IN (
+      SELECT id FROM friendship_statuses 
+        WHERE name = 'Confirmed'
+    )
+)
+UNION
+(SELECT user_id 
+  FROM friendship 
+  WHERE friend_id = 4
+    AND status_id IN (
+      SELECT id FROM friendship_statuses 
+        WHERE name = 'Confirmed'
+    )
+);
+
+-- Р’С‹Р±РµСЂРµРј РјРµРґРёР°С„Р°Р№Р»С‹ РґСЂСѓР·РµР№
+SELECT filename FROM media WHERE user_id IN (
+  (SELECT friend_id 
+  FROM friendship 
+  WHERE user_id = 4
+    AND status_id IN (
+      SELECT id FROM friendship_statuses 
+        WHERE name = 'Confirmed'
+    )
+  )
+  UNION
+  (SELECT user_id 
+    FROM friendship 
+    WHERE friend_id = 4 
+      AND status_id IN (
+      SELECT id FROM friendship_statuses 
+        WHERE name = 'Confirmed'
+    )
+  )
+);
+
+-- РћР±СЉРµРґРёРЅСЏРµРј РјРµРґРёР°С„Р°Р№Р»С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ Рё РµРіРѕ РґСЂСѓР·РµР№ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ Р»РµРЅС‚С‹ РЅРѕРІРѕСЃС‚РµР№
+SELECT filename, user_id, created_at FROM media WHERE user_id = 4
+UNION
+SELECT filename, user_id, created_at FROM media WHERE user_id IN (
+  (SELECT friend_id 
+  FROM friendship 
+  WHERE user_id = 4
+    AND status_id IN (
+      SELECT id FROM friendship_statuses 
+        WHERE name = 'Confirmed'
+    )
+  )
+  UNION
+  (SELECT user_id 
+    FROM friendship 
+    WHERE friend_id = 4 
+      AND status_id IN (
+      SELECT id FROM friendship_statuses 
+        WHERE name = 'Confirmed'
+    )
+  )
+);
+
+-- РћРїСЂРµРґРµР»СЏРµРј РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№, РѕР±С‰РµРµ Р·Р°РЅРёРјР°РµРјРѕРµ РјРµСЃС‚Рѕ РјРµРґРёР°С„Р°Р№Р»РѕРІ РєРѕС‚РѕСЂС‹С… 
+-- РїСЂРµРІС‹С€Р°РµС‚ 100РњР‘
+SELECT user_id, SUM(size) AS total
+  FROM media
+  GROUP BY user_id
+  HAVING total > 100000000
+  ORDER BY total DESC;
+ 
+-- РџРѕРґСЃС‡РёС‚С‹РІР°РµРј Р»Р°Р№РєРё РґР»СЏ РјРµРґРёР°С„Р°Р№Р»РѕРІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ Рё РµРіРѕ РґСЂСѓР·РµР№
+SELECT target_id AS mediafile, COUNT(*) AS likes 
+  FROM likes 
+    WHERE target_id IN (
+      SELECT id FROM media WHERE user_id = 4
+        UNION
+      (SELECT id FROM media WHERE user_id IN (
+        SELECT friend_id 
+          FROM friendship 
+            WHERE user_id = 4 
+              AND status_id IN (
+                SELECT id FROM friendship_statuses 
+                  WHERE name = 'Confirmed'
+              )))
+        UNION
+      (SELECT id FROM media WHERE user_id IN (
+        SELECT user_id 
+          FROM friendship 
+            WHERE friend_id = 4 
+              AND status_id IN (
+                SELECT id FROM friendship_statuses 
+                  WHERE name = 'Confirmed'
+              ))) 
+    )
+    AND target_type_id = (SELECT id FROM target_types WHERE name = 'media')
+    GROUP BY target_id;
+   
+-- РќР°С‡РёРЅР°РµРј СЃРѕР·РґР°РІР°С‚СЊ Р°СЂС…РёРІ РЅРѕРІРѕСЃС‚РµР№ РґР»СЏ РјРµРґРёР°С„Р°Р№Р»РѕРІ РїРѕ РјРµСЃСЏС†Р°Рј
+SELECT COUNT(id) AS arhive, MONTHNAME(created_at) AS month 
+  FROM media
+  GROUP BY month;
+ 
+SET sql_mode = '';
+ 
+-- РђСЂС…РёРІ СЃ РїСЂР°РІРёР»СЊРЅРѕР№ СЃРѕСЂС‚РёСЂРѕРІРєРѕР№ РЅРѕРІРѕСЃС‚РµР№ РїРѕ РјРµСЃСЏС†Р°Рј
+SELECT COUNT(id) AS news, 
+  MONTHNAME(created_at) AS month,
+  MONTH(created_at) AS month_num 
+    FROM media
+      WHERE YEAR(created_at) = YEAR(NOW())
+    GROUP BY month_num
+    ORDER BY month_num DESC;
+
+SELECT COUNT(id) AS news, 
+  MONTHNAME(created_at) AS month,
+  MONTH(created_at) AS month_num  
+    FROM media
+    GROUP BY month_num
+    ORDER BY month_num DESC;
+    
+SELECT COUNT(id) AS news, 
+  MONTHNAME(created_at) AS month
+    FROM media
+    GROUP BY MONTH(created_at)
+    ORDER BY MONTH(created_at) DESC;  
+
+-- Р’С‹Р±РёСЂР°РµРј СЃРѕРѕР±С‰РµРЅРёСЏ РѕС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ Рё Рє РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ
+SELECT from_user_id, to_user_id, body, is_delivered, created_at 
+  FROM messages
+    WHERE from_user_id = 3
+      OR to_user_id = 3
+    ORDER BY created_at DESC;
+   
+-- РќРµРїСЂРѕС‡РёС‚Р°РЅРЅС‹Рµ СЃРѕРѕР±С‰РµРЅРёСЏ
+SELECT from_user_id, 
+  to_user_id, 
+  body, 
+  IF(is_delivered, 'delivered', 'not delivered') AS status 
+    FROM messages
+      WHERE (from_user_id = 3 OR to_user_id = 3)
+    ORDER BY created_at DESC;
+   
+-- Р’С‹РІРѕРґРёРј РґСЂСѓР·РµР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ СЃ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµРј РїРѕР»Р° Рё РІРѕР·СЂР°СЃС‚Р° 
+SELECT 
+    (SELECT CONCAT(first_name, ' ', last_name) 
+      FROM users 
+      WHERE id = user_id) AS friend,  
+    CASE (sex)
+      WHEN 'm' THEN 'man'
+      WHEN 'f' THEN 'women'
+    END AS sex,
+    TIMESTAMPDIFF(YEAR, birthdate, NOW()) AS age   
+  FROM profiles
+  WHERE user_id IN (
+    SELECT friend_id 
+      FROM friendship
+      WHERE user_id = 4
+        AND confirmed_at IS NOT NULL
+        AND status_id IN (
+          SELECT id FROM friendship_statuses 
+            WHERE name = 'Confirmed')
+  UNION
+      SELECT user_id 
+      FROM friendship
+      WHERE friend_id = 4
+        AND confirmed_at IS NOT NULL
+        AND status_id IN (
+          SELECT id FROM friendship_statuses 
+            WHERE name = 'Confirmed')
+  );
+ 
+-- РџРѕРёСЃРє РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РїРѕ С€Р°Р±Р»РѕРЅР°Рј РёРјРµРЅРё  
+SELECT CONCAT(first_name, ' ', last_name) AS fullname  
+  FROM users
+  WHERE first_name LIKE 'M%';
+ 
+-- РСЃРїРѕР»СЊР·СѓРµРј СЂРµРіСѓР»СЏСЂРЅС‹Рµ РІС‹СЂР°Р¶РµРЅРёСЏ
+SELECT CONCAT(first_name, ' ', last_name) AS fullname  
+  FROM users
+  WHERE last_name RLIKE '^M.*n$';
+
+
+
+
+  
+   
+
+
+
+
+ 
+
+
+
 
 
 
