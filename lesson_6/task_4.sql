@@ -38,4 +38,17 @@ FROM likes
   FROM profiles 
   WHERE sex = 'm')) AS 
  'Women>Men';
-  
+-- Как решил преподаватель  
+SELECT CASE(sex)
+		WHEN 'm' THEN 'man'
+		WHEN 'f' THEN 'woman'
+	END AS sex, 
+	COUNT(*) as likes_count 
+	  FROM (
+	    SELECT 
+	      user_id as user, 
+		    (SELECT sex FROM profiles WHERE user_id = user) as sex 
+		  FROM likes) dummy_table 
+  GROUP BY sex
+  ORDER BY likes_count DESC
+  LIMIT 1;

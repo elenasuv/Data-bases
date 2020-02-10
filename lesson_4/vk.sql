@@ -658,6 +658,255 @@ SELECT CONCAT(first_name, ' ', last_name) AS fullname
 SELECT CONCAT(first_name, ' ', last_name) AS fullname  
   FROM users
   WHERE last_name RLIKE '^M.*n$';
+ 
+-- Добавляем внешние ключи для таблицы profiles
+ALTER TABLE profiles
+  ADD CONSTRAINT profiles_user_id_fk 
+    FOREIGN KEY (user_id) REFERENCES users(id)
+      ON DELETE CASCADE,
+  ADD CONSTRAINT profiles_photo_id_fk
+    FOREIGN KEY (photo_id) REFERENCES media(id)
+      ON DELETE SET NULL;
+     
+-- Добавляем внешние ключи для таблицы messages
+ALTER TABLE messages
+  ADD CONSTRAINT messages_from_user_id_fk 
+    FOREIGN KEY (from_user_id) REFERENCES users(id),
+  ADD CONSTRAINT messages_to_user_id_fk 
+    FOREIGN KEY (to_user_id) REFERENCES users(id);
+   
+-- Выборка данных по пользователю
+SELECT first_name, last_name, email, sex, birthdate, hometown
+  FROM users
+    INNER JOIN profiles
+      ON users.id = profiles.user_id
+  WHERE users.id = 3;
+ 
+-- Выборка медиафайлов пользователя
+SELECT media.user_id, media.filename, media.created_at
+  FROM media
+    JOIN users
+      ON media.user_id = users.id     
+  WHERE media.user_id = 3;
+ 
+-- Выборка фотографий пользователя
+SELECT media.user_id, media.filename, media.created_at
+  FROM media
+    JOIN users
+      ON media.user_id = users.id
+    JOIN media_types
+      ON media.media_type_id = media_types.id     
+  WHERE media.user_id = 3 AND media_types.name = 'photo';
+ 
+-- Выборка медиафайлов друзей пользователя
+SELECT DISTINCT media.user_id, media.filename, media.created_at
+  FROM media
+    JOIN friendship
+      ON media.user_id = friendship.user_id
+        OR media.user_id = friendship.friend_id
+    JOIN users 
+      ON users.id = friendship.friend_id
+        OR users.id = friendship.user_id   
+  WHERE users.id = 3;
+
+-- Проверка
+SELECT user_id, friend_id FROM friendship WHERE user_id = 3 OR friend_id = 3;
+SELECT * FROM media WHERE user_id IN (76, 41);
+
+-- Выборка фотографий пользователя и друзей пользователя
+SELECT media.user_id, media.filename, media.created_at
+  FROM media
+    JOIN friendship
+      ON media.user_id = friendship.user_id
+        OR media.user_id = friendship.friend_id
+    JOIN media_types
+      ON media.media_type_id = media_types.id
+    JOIN users 
+      ON users.id = friendship.friend_id
+        OR users.id = friendship.user_id   
+  WHERE users.id = 3 AND media_types.name = 'photo';
+ 
+ -- Используем DISTINC  
+SELECT DISTINCT media.user_id, media.filename, media.created_at
+  FROM media
+    JOIN friendship
+      ON media.user_id = friendship.user_id
+        OR media.user_id = friendship.friend_id
+    JOIN media_types
+      ON media.media_type_id = media_types.id
+    JOIN users 
+      ON users.id = friendship.friend_id
+        OR users.id = friendship.user_id   
+  WHERE users.id = 3 AND media_types.name = 'photo';  
+
+-- Проверка
+ SELECT * FROM media_types;
+
+SELECT user_id, friend_id FROM friendship WHERE user_id = 3 OR friend_id = 3;
+SELECT * FROM media WHERE media_type_id = 1 AND user_id IN (3);
+
+-- Сообщения от пользователя
+SELECT messages.body, users.first_name, users.last_name, messages.created_at
+  FROM messages
+    JOIN users
+      ON users.id = messages.to_user_id
+  WHERE messages.from_user_id = 3;
+ 
+-- Сообщения к пользователю
+SELECT body, first_name, last_name, messages.created_at
+  FROM messages
+    JOIN users
+      ON users.id = messages.from_user_id
+  WHERE messages.to_user_id = 3;
+
+-- Объединяем все сообщения от пользователя и к пользователю
+SELECT messages.from_user_id, messages.to_user_id, messages.body, messages.created_at
+  FROM users
+    JOIN messages
+      ON users.id = messages.to_user_id
+        OR users.id = messages.from_user_id
+  WHERE users.id = 3;
+ 
+-- Количество друзей у пользователя с сортировкой
+-- Выполним объединение и посмотрим на результат
+SELECT users.id, first_name, last_name, requested_at
+  FROM users
+    LEFT JOIN friendship
+      ON users.id = friendship.user_id
+        OR users.id = friendship.friend_id
+        ORDER BY users.id;
+       
+-- Затем подсчитаем
+SELECT users.id, first_name, last_name, COUNT(requested_at) AS total_friends
+  FROM users
+    LEFT JOIN friendship
+      ON users.id = friendship.user_id
+        OR users.id = friendship.friend_id
+  GROUP BY users.id
+  ORDER BY total_friends DESC
+  LIMIT 10;
+
+-- Проверка
+SELECT * FROM friendship WHERE user_id = 16 OR friend_id = 16;
+
+-- Количество друзей у пользователя с определённым статусом с сортировкой
+SELECT id, first_name, last_name, COUNT(requested_at) AS total_friends
+  FROM users
+    LEFT JOIN friendship
+      ON (users.id = friendship.user_id
+        OR users.id = friendship.friend_id)
+        AND friendship.status_id = 1
+  GROUP BY users.id
+  ORDER BY total_friends DESC;
+  
+-- Проверка
+SELECT * FROM friendship WHERE (user_id = 97 OR friend_id = 97) AND status_id = 1;
+
+-- Список медиафайлов пользователя с количеством лайков
+SELECT likes.target_id,
+  media.filename,
+  target_types.name AS target_type,
+  COUNT(DISTINCT(likes.id)) AS total_likes,
+  CONCAT(first_name, ' ', last_name) AS owner
+  FROM media
+    LEFT JOIN likes
+      ON media.id = likes.target_id
+    LEFT JOIN target_types
+      ON likes.target_type_id = target_types.id
+    LEFT JOIN users
+      ON users.id = media.user_id
+  WHERE users.id = 3 AND target_types.name = 'media'
+  GROUP BY media.id;
+
+-- Проверка
+SELECT id, user_id FROM media WHERE id = 22;
+
+-- 10 пользователей с наибольшим количеством лайков за медиафайлы
+SELECT users.id, first_name, last_name, COUNT(*) AS total_likes
+  FROM users
+    JOIN media
+      ON users.id = media.user_id
+    JOIN likes
+      ON media.id = likes.target_id
+    JOIN target_types
+      ON likes.target_type_id = target_types.id
+  WHERE target_types.id = 3
+  GROUP BY users.id
+  ORDER BY total_likes DESC
+  LIMIT 10;
+ 
+ DESC friendship;
+ 
+ -- Добавляем внешние ключи для таблицы friendship
+ALTER TABLE friendship
+  ADD CONSTRAINT friendship_user_id_fk 
+    FOREIGN KEY (user_id) REFERENCES users(id),
+  ADD CONSTRAINT friendship_friend_id_fk 
+    FOREIGN KEY (friend_id) REFERENCES users(id),
+  ADD CONSTRAINT friendship_status_id_fk 
+    FOREIGN KEY (status_id) REFERENCES friendship_statuses(id);
+   
+   DESC communities_users;
+  
+  -- Добавляем внешние ключи для таблицы сomunities_users
+ALTER TABLE communities_users
+  ADD CONSTRAINT communities_users_community_id_fk 
+    FOREIGN KEY (community_id) REFERENCES communities(id),
+  ADD CONSTRAINT communities_users_user_id_fk 
+    FOREIGN KEY (user_id) REFERENCES users(id);
+   
+ DESC media;
+-- Добавляем внешние ключи для таблицы media
+ALTER TABLE media
+  ADD CONSTRAINT media_media_type_id_fk 
+    FOREIGN KEY (media_type_id) REFERENCES media_types(id),
+  ADD CONSTRAINT media_user_id_fk 
+    FOREIGN KEY (user_id) REFERENCES users(id);
+   
+  SHOW TABLES;
+ 
+ DESC communities;
+ DESC family_statuses;
+ DESC friendship_statuses;
+ DESC likes; 
+
+-- Добавляем внешние ключи для таблицы likes
+ALTER TABLE likes
+  ADD CONSTRAINT likes_user_id_fk 
+    FOREIGN KEY (user_id) REFERENCES users(id),
+  ADD CONSTRAINT likes_target_type_id_fk 
+    FOREIGN KEY (target_type_id) REFERENCES target_types(id);
+   
+ DESC posts;
+
+-- Добавляем внешние ключи для таблицы posts
+ALTER TABLE posts
+  ADD CONSTRAINT posts_author_id_fk 
+    FOREIGN KEY (author_id) REFERENCES users(id),
+  ADD CONSTRAINT posts_media_id_fk 
+    FOREIGN KEY (media_id) REFERENCES media(id);
+
+DESC profiles;
+
+-- Добавляем недостающие внешние ключи для таблицы profiles
+ALTER TABLE profiles
+  ADD CONSTRAINT profiles_family_status_id_fk 
+    FOREIGN KEY (family_status_id) REFERENCES family_statuses(id);
+   
+
+   
+
+
+
+
+
+  
+   
+  
+  
+  
+
+
 
 
 

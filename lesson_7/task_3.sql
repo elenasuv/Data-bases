@@ -51,3 +51,15 @@ SELECT cities.name
    flights.`to` = cities.label;
   
   
+  -- Как решил преподаватель. Надо было просто задать другие имена одинаковых столбцов.
+  SELECT
+  f.id,
+  cities_from.name AS `from`,
+  cities_to.name AS `to`
+FROM flights AS f
+  LEFT JOIN cities AS cities_from
+    ON f.from = cities_from.label
+  LEFT JOIN cities AS cities_to
+    ON f.to = cities_to.label;
+  
+  
