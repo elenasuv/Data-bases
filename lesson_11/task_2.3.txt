@@ -1,0 +1,20 @@
+switched to db shop
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+shop    0.000GB
+> db.shop.insert({name: 'Intel Core i3-8100', description: 'Процессор для настольных персональных компьютеров, основанных на платформе Intel.', price: '7890.00', catalog: 'Процессоры'})
+WriteResult({ "nInserted" : 1 })
+> db.shop.insert({name: 'Intel Core i5-7400', description: 'Процессор для настольных персональных компьютеров, основанных на платформе Intel.', price: '12700.00', catalog: 'Процессоры'})
+WriteResult({ "nInserted" : 1 })
+> db.shop.insert({name: 'ASUS ROG MAXIMUS X HERO', description: 'Материнская плата ASUS ROG MAXIMUS X HERO, Z370, Socket 1151-V2, DDR4, ATX', price: '4790.00', catalog: 'Мат. платы'})
+WriteResult({ "nInserted" : 1 })
+> db.shop.insert({name: 'MSI B250M GAMING PRO', description: 'Материнская плата MSI B250M GAMING PRO, B250, Socket 1151, DDR4, mATX', price: '5060.00', catalog: 'Мат. платы'})
+WriteResult({ "nInserted" : 1 })
+> db.shop.find()
+{ "_id" : ObjectId("5e4c39f80c05041bbb524efe"), "name" : "Intel Core i3-8100", "description" : "Процессор для настольных персональных компьютеров, основанных на платформе Intel.", "price" : "7890.00", "catalog" : "Процессоры" }
+{ "_id" : ObjectId("5e4c3a130c05041bbb524eff"), "name" : "Intel Core i5-7400", "description" : "Процессор для настольных персональных компьютеров, основанных на платформе Intel.", "price" : "12700.00", "catalog" : "Процессоры" }
+{ "_id" : ObjectId("5e4c3a330c05041bbb524f00"), "name" : "ASUS ROG MAXIMUS X HERO", "description" : "Материнская плата ASUS ROG MAXIMUS X HERO, Z370, Socket 1151-V2, DDR4, ATX", "price" : "4790.00", "catalog" : "Мат. платы" }
+{ "_id" : ObjectId("5e4c3a500c05041bbb524f01"), "name" : "MSI B250M GAMING PRO", "description" : "Материнская плата MSI B250M GAMING PRO, B250, Socket 1151, DDR4, mATX", "price" : "5060.00", "catalog" : "Мат. платы" }
+> 
