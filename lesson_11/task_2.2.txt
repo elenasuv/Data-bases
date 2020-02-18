@@ -1,0 +1,9 @@
+127.0.0.1:6379> MSET elena e.se@gmail.com maxim m.fa@gmail.com 
+OK
+127.0.0.1:6379> GET elena
+"e.se@gmail.com"
+127.0.0.1:6379> MSET e.se@gmail.com elena m.fa@gmail.com maxim
+OK
+127.0.0.1:6379> GET e.se@gmail.com
+"elena"
+
